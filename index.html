@@ -2,10 +2,10 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<title>SBD Digital Remote Training • ICF-SL Tools</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>SBD Digital Remote Training | ICF-SL Tools</title>
 
-<!-- PWA Meta + Manifest -->
+<!-- PWA Meta -->
 <meta name="description" content="ICF-SL Data Management and Analysis Tools for SBD Campaign 2026">
 <meta name="theme-color" content="#004080">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -14,107 +14,190 @@
 <link rel="manifest" href="./manifest.json">
 <link rel="apple-touch-icon" href="./icon-192.svg">
 
-<!-- Oswald Font -->
+<!-- Google Fonts + Base -->
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
 <style>
+  /* ========== RESET & GLOBAL ========== */
   *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
   :root {
     --navy: #004080; --navy-dark: #002d5a; --navy-light: #0056b3;
     --gold: #C8973A; --white: #ffffff; --bg: #f0f4f9;
     --border: #dde6f0; --text: #0a1a2e; --muted: #5a7090;
   }
-  body { font-family: 'Oswald', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
+  body {
+    font-family: 'Oswald', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
 
-  /* header */
-  .header { background: var(--navy); padding: 0 40px; display: flex; align-items: center; justify-content: space-between; min-height: 72px; position: relative; overflow: hidden; flex-wrap: wrap; gap: 12px; }
-  .header::before { content: ''; position: absolute; inset: 0; background: repeating-linear-gradient(90deg,transparent,transparent 60px,rgba(200,151,58,0.06) 60px,rgba(200,151,58,0.06) 61px); pointer-events: none; }
+  /* ========== HEADER ========== */
+  .header {
+    background: var(--navy);
+    padding: 0 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 72px;
+    position: relative;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
   .header-left { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
-  .logo-box { background: #fff; border-radius: 7px; padding: 6px 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-  .logo-box img { height: 46px; width: auto; max-width: 90px; border-radius: 4px; display: block; object-fit: contain; }
-  .logo-placeholder { height: 46px; width: 80px; background: rgba(255,255,255,0.15); border: 1.5px dashed rgba(255,255,255,0.4); border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 700; letter-spacing: 1px; color: rgba(255,255,255,0.6); }
+  .logo-box {
+    background: #fff;
+    border-radius: 7px;
+    padding: 6px 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .logo-box img { height: 46px; width: auto; max-width: 90px; object-fit: contain; }
+  .logo-placeholder { height: 46px; width: 80px; background: rgba(255,255,255,0.15); border: 1.5px dashed rgba(255,255,255,0.4); border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 700; color: rgba(255,255,255,0.6); }
   .header-divider { width: 1px; height: 36px; background: rgba(255,255,255,0.2); }
-  .header-title { color: var(--white); font-size: 15px; font-weight: 500; letter-spacing: 0.5px; line-height: 1.2; }
+  .header-title { color: var(--white); font-size: 15px; font-weight: 500; line-height: 1.2; }
   .header-title span { display: block; font-size: 11px; font-weight: 300; opacity: 0.7; text-transform: uppercase; margin-top: 2px; }
-  .pwa-install-btn { background: linear-gradient(135deg, #28a745 0%, #20c997 100%); color: white; border: 2px solid white; padding: 8px 20px; border-radius: 25px; font-size: 12px; font-weight: 700; font-family: 'Oswald', sans-serif; letter-spacing: 0.5px; cursor: pointer; text-transform: uppercase; transition: all 0.3s ease; white-space: nowrap; animation: pulseGlow 2s ease-in-out infinite; }
+  
+  /* PWA Install Button */
+  .pwa-install-btn {
+    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+    color: white;
+    border: 2px solid white;
+    padding: 8px 20px;
+    border-radius: 40px;
+    font-size: 12px;
+    font-weight: 700;
+    font-family: 'Oswald', sans-serif;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: 0.2s;
+    white-space: nowrap;
+    animation: pulseGlow 2s infinite;
+  }
   @keyframes pulseGlow { 0%,100% { box-shadow: 0 4px 15px rgba(40,167,69,0.4); } 50% { box-shadow: 0 4px 25px rgba(40,167,69,0.8); } }
   .pwa-install-btn.installed { background: linear-gradient(135deg, #004080 0%, #0056b3 100%); animation: none; cursor: default; border-color: rgba(255,255,255,0.4); }
-  .hero-band { background: linear-gradient(135deg, var(--navy-dark) 0%, var(--navy) 60%, var(--navy-light) 100%); padding: 36px 40px 30px; position: relative; }
+  
+  /* Hero */
+  .hero-band {
+    background: linear-gradient(135deg, var(--navy-dark) 0%, var(--navy) 60%, var(--navy-light) 100%);
+    padding: 36px 40px 30px;
+    position: relative;
+  }
   .hero-tag { display: inline-block; background: var(--gold); color: var(--navy-dark); font-size: 9px; font-weight: 700; letter-spacing: 2px; padding: 4px 10px; border-radius: 2px; text-transform: uppercase; margin-bottom: 14px; }
   .hero-band h1 { color: var(--white); font-size: 34px; font-weight: 700; letter-spacing: 1px; line-height: 1.1; margin-bottom: 8px; }
   .hero-band h1 em { font-style: normal; color: var(--gold); }
   .hero-band p { color: rgba(255,255,255,0.6); font-size: 13px; font-weight: 300; max-width: 560px; line-height: 1.7; }
-
+  
+  /* MAIN GRID */
   .main { flex: 1; padding: 32px 40px 40px; }
   .grid-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 22px; }
   .grid-label { font-size: 10px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); display: flex; align-items: center; gap: 10px; }
   .grid-label::before { content: ''; width: 18px; height: 2px; background: var(--gold); border-radius: 2px; }
   .count-badge { background: var(--navy); color: white; font-size: 10px; font-weight: 700; padding: 3px 10px; border-radius: 20px; }
-  .cards-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; }
-
-  /* cards */
-  .card { background: white; border: 1.5px solid var(--border); border-radius: 12px; overflow: hidden; cursor: pointer; transition: all 0.25s cubic-bezier(0.4,0,0.2,1); display: flex; flex-direction: column; min-height: 200px; animation: cardIn 0.5s ease both; }
-  @keyframes cardIn { from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:translateY(0)} }
-  .card::before { content: ''; position: absolute; top:0;left:0;right:0; height: 3px; background: linear-gradient(90deg,var(--navy),var(--gold)); transform: scaleX(0); transform-origin: left; transition: transform 0.3s ease; }
-  .card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(0,64,128,0.14); border-color: var(--navy); }
+  
+  /* CARDS GRID – 3 columns, fully responsive */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+  
+  /* CARD STYLES */
+  .card {
+    background: var(--white);
+    border: 1.5px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.2, 0, 0, 1);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    animation: fadeInUp 0.5s ease backwards;
+  }
+  @keyframes fadeInUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--navy), var(--gold));
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.25s ease;
+  }
+  .card:hover { transform: translateY(-5px); box-shadow: 0 16px 28px rgba(0,64,128,0.12); border-color: var(--navy); }
   .card:hover::before { transform: scaleX(1); }
-  .card-top { background: var(--navy); padding: 20px 20px 16px; flex: 1; position: relative; }
-  .card-num { width: 30px; height: 30px; background: var(--gold); color: var(--navy-dark); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; margin-bottom: 12px; }
-  .card-name { color: white; font-size: 13px; font-weight: 600; letter-spacing: 0.5px; margin-bottom: 8px; text-transform: uppercase; }
-  .card-desc { color: rgba(255,255,255,0.55); font-size: 11px; font-weight: 300; line-height: 1.6; }
+  .card-top { background: var(--navy); padding: 22px 20px 18px; flex: 1; }
+  .card-num {
+    width: 34px; height: 34px;
+    background: var(--gold);
+    color: var(--navy-dark);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    font-weight: 800;
+    margin-bottom: 14px;
+  }
+  .card-name { color: white; font-size: 16px; font-weight: 600; letter-spacing: 0.5px; margin-bottom: 8px; text-transform: uppercase; }
+  .card-desc { color: rgba(255,255,255,0.6); font-size: 11px; font-weight: 300; line-height: 1.5; }
   .card-footer { padding: 12px 20px; border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
   .card-status { font-size: 9px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); display: flex; align-items: center; gap: 6px; }
   .status-dot { width: 6px; height: 6px; border-radius: 50%; background: #ccc; }
-  .status-dot.active { background: #28a745; }
-  .card-arrow { width: 28px; height: 28px; border: 1.5px solid var(--border); border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: all 0.2s; color: var(--navy); }
+  .status-dot.active { background: #28a745; box-shadow: 0 0 4px #28a745; }
+  .card-arrow { width: 28px; height: 28px; border: 1.5px solid var(--border); border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: 0.2s; color: var(--navy); }
   .card:hover .card-arrow { background: var(--navy); border-color: var(--navy); color: white; }
-  .page-footer { background: var(--navy); color: rgba(255,255,255,0.5); text-align: center; padding: 18px 40px; font-size: 10px; font-weight: 300; text-transform: uppercase; }
-
-  /* Modal + Video (Fixed: video plays reliably) */
-  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,20,50,0.75); backdrop-filter: blur(5px); z-index: 1000; }
-  .modal-overlay.open { display: flex; animation: overlayIn 0.2s ease; }
-  @keyframes overlayIn { from{opacity:0} to{opacity:1} }
-  .modal { width: 100%; height: 100%; background: var(--white); display: flex; flex-direction: column; animation: modalIn 0.25s cubic-bezier(0.4,0,0.2,1); }
-  @keyframes modalIn { from{transform:translateY(20px);opacity:0} to{transform:translateY(0);opacity:1} }
-
-  .modal-header { background: var(--navy); padding: 0 30px; display: flex; align-items: center; justify-content: space-between; min-height: 64px; flex-shrink: 0; border-bottom: 2px solid var(--gold); }
+  
+  /* MODAL */
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,20,50,0.8); backdrop-filter: blur(6px); z-index: 1000; }
+  .modal-overlay.open { display: flex; animation: fadeIn 0.2s ease; }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  .modal { width: 100%; height: 100%; background: var(--white); display: flex; flex-direction: column; animation: slideUp 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1); }
+  @keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+  .modal-header { background: var(--navy); padding: 0 28px; display: flex; align-items: center; justify-content: space-between; min-height: 64px; border-bottom: 2px solid var(--gold); flex-shrink: 0; }
   .modal-title-group { display: flex; align-items: center; gap: 14px; }
-  .modal-num { width: 34px; height: 34px; background: var(--gold); color: var(--navy-dark); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; }
+  .modal-num { width: 34px; height: 34px; background: var(--gold); color: var(--navy-dark); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 800; }
   .modal-title-text { color: white; font-size: 16px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
-  .modal-actions { display: flex; gap: 10px; }
-  .btn-new-tab { background: var(--gold); color: var(--navy-dark); border: none; padding: 8px 16px; border-radius: 20px; font-size: 11px; font-weight: 700; font-family: 'Oswald',sans-serif; cursor: pointer; text-transform: uppercase; display: flex; align-items: center; gap: 6px; transition: 0.2s; }
+  .modal-actions { display: flex; gap: 12px; }
+  .btn-new-tab { background: var(--gold); color: var(--navy-dark); border: none; padding: 6px 18px; border-radius: 30px; font-size: 11px; font-weight: 700; font-family: 'Oswald',sans-serif; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: 0.2s; }
   .btn-new-tab:hover { background: #e0aa4a; transform: scale(1.02); }
-  .btn-close { width: 36px; height: 36px; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2); border-radius: 50%; color: white; font-size: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
-
+  .btn-close { width: 36px; height: 36px; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.25); border-radius: 50%; color: white; font-size: 22px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
+  .btn-close:hover { background: rgba(255,255,255,0.25); transform: rotate(90deg); }
+  
+  /* TABS */
   .modal-tabs { display: flex; background: #f5f8fc; border-bottom: 2px solid var(--border); flex-shrink: 0; }
-  .tab-btn { flex: 1; padding: 14px 20px; border: none; background: transparent; color: var(--muted); font-family: 'Oswald',sans-serif; font-size: 13px; font-weight: 600; text-transform: uppercase; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; border-right: 1px solid var(--border); position: relative; }
+  .tab-btn { flex: 1; padding: 14px 16px; border: none; background: transparent; color: var(--muted); font-family: 'Oswald',sans-serif; font-size: 13px; font-weight: 600; text-transform: uppercase; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; border-right: 1px solid var(--border); position: relative; }
   .tab-btn.active { background: var(--navy); color: white; }
-  .tab-btn.active::after { content: ''; position: absolute; bottom: -2px; left:0; right:0; height: 2px; background: var(--gold); }
-
-  .modal-body { flex: 1; overflow: hidden; position: relative; background: #000; }
+  .tab-btn.active::after { content: ''; position: absolute; bottom: -2px; left: 0; right: 0; height: 2px; background: var(--gold); }
+  
+  /* MODAL BODY + VIDEO */
+  .modal-body { flex: 1; overflow: hidden; position: relative; background: #0a0a0a; }
   .modal-iframe { width: 100%; height: 100%; border: none; display: none; background: white; }
-
-  /* Video Container: robust playback */
-  .video-container { position: absolute; inset: 0; display: none; flex-direction: column; background: #0a0a0a; }
+  .video-container { position: absolute; inset: 0; display: none; flex-direction: column; background: #000; }
   .video-container.visible { display: flex; }
   .video-element { width: 100%; height: 100%; object-fit: contain; flex: 1; background: black; }
   .video-controls-bar { background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); padding: 10px 20px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; border-top: 1px solid rgba(255,255,255,0.2); }
-  .vid-play-btn { background: var(--gold); border: none; width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; flex-shrink: 0; }
-  .vid-progress-wrap { flex: 1; min-width: 120px; display: flex; flex-direction: column; gap: 4px; }
-  .vid-progress-slider { width: 100%; height: 5px; -webkit-appearance: none; background: rgba(255,255,255,0.3); border-radius: 5px; outline: none; cursor: pointer; }
+  .vid-play-btn { background: var(--gold); border: none; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; transition: 0.2s; flex-shrink: 0; }
+  .vid-progress-wrap { flex: 1; min-width: 120px; }
+  .vid-progress-slider { width: 100%; height: 5px; -webkit-appearance: none; background: rgba(255,255,255,0.3); border-radius: 5px; cursor: pointer; }
   .vid-progress-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 14px; height: 14px; background: var(--gold); border-radius: 50%; cursor: pointer; }
-  .vid-time { font-size: 11px; color: rgba(255,255,255,0.7); font-family: monospace; }
-  .vid-volume-slider { width: 80px; height: 4px; -webkit-appearance: none; background: rgba(255,255,255,0.3); border-radius: 5px; }
-  .vid-volume-slider::-webkit-slider-thumb { width: 12px; height: 12px; background: var(--gold); border-radius: 50%; cursor: pointer; }
-  .fullscreen-btn { background: rgba(255,255,255,0.1); border: none; width: 32px; height: 32px; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; color: white; }
-
-  .state-loading, .state-placeholder { position: absolute; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; background: #f5f8fc; text-align: center; padding: 30px; }
+  .vid-time { font-size: 11px; color: rgba(255,255,255,0.7); font-family: monospace; margin-top: 4px; }
+  .vid-volume-slider { width: 80px; height: 4px; -webkit-appearance: none; background: rgba(255,255,255,0.3); border-radius: 5px; cursor: pointer; }
+  .vid-volume-slider::-webkit-slider-thumb { width: 12px; height: 12px; background: var(--gold); border-radius: 50%; }
+  .fullscreen-btn { background: rgba(255,255,255,0.1); border: none; width: 32px; height: 32px; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; color: white; font-size: 18px; }
+  .state-loading, .state-placeholder { position: absolute; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; background: #f8fafd; text-align: center; padding: 30px; z-index: 5; }
   .state-loading.visible, .state-placeholder.visible { display: flex; }
-  .spinner { width: 44px; height: 44px; border: 4px solid #dde6f0; border-top-color: var(--navy); border-radius: 50%; animation: spin 0.8s linear infinite; }
+  .spinner { width: 44px; height: 44px; border: 4px solid #e2e8f0; border-top-color: var(--navy); border-radius: 50%; animation: spin 0.8s linear infinite; }
   @keyframes spin { to { transform: rotate(360deg); } }
-
-  @media (max-width:900px) { .cards-grid { grid-template-columns: repeat(2,1fr); } .main, .hero-band { padding-left: 20px; padding-right: 20px; } }
-  @media (max-width:640px) { .cards-grid { grid-template-columns: 1fr; } .modal-header { padding: 0 16px; } .tab-btn { font-size: 11px; padding: 10px 4px; } }
+  
+  .page-footer { background: var(--navy); color: rgba(255,255,255,0.5); text-align: center; padding: 20px 40px; font-size: 10px; font-weight: 300; text-transform: uppercase; letter-spacing: 1px; }
+  .update-toast { position: fixed; bottom: 24px; right: 24px; background: var(--navy); color: white; padding: 12px 20px; border-radius: 40px; display: flex; gap: 16px; align-items: center; z-index: 9999; box-shadow: 0 8px 20px rgba(0,0,0,0.2); border-left: 4px solid var(--gold); }
+  @media (max-width: 900px) { .cards-grid { grid-template-columns: repeat(2,1fr); } .header, .hero-band, .main { padding-left: 20px; padding-right: 20px; } }
+  @media (max-width: 580px) { .cards-grid { grid-template-columns: 1fr; } .modal-tabs { flex-direction: column; } .tab-btn { border-right: none; border-bottom: 1px solid var(--border); } }
 </style>
 </head>
 <body>
@@ -133,11 +216,11 @@
 <div class="hero-band">
   <div class="hero-tag">SBD Campaign 2026</div>
   <h1>My <em>Tools</em></h1>
-  <p>School Based Distribution of ITNs — Sierra Leone. Click any tool card to open full documentation, training video, or interactive tool.</p>
+  <p>School Based Distribution of ITNs — Sierra Leone. Click any card to open full documentation, video illustration, or interactive tool.</p>
 </div>
 
 <main class="main">
-  <div class="grid-header"><div class="grid-label">Available Tools</div><div class="count-badge" id="countBadge">6 Tools</div></div>
+  <div class="grid-header"><div class="grid-label">Available Tools</div><div class="count-badge" id="countBadge">0 Tools</div></div>
   <div class="cards-grid" id="cardsGrid"></div>
 </main>
 
@@ -156,18 +239,14 @@
       <button class="tab-btn" id="tabTool" onclick="switchTab('tool')"><span>🛠️</span> Tool</button>
     </div>
     <div class="modal-body">
-      <div class="state-loading" id="stateLoading"><div class="spinner"></div><div class="loading-text">Loading content…</div></div>
+      <div class="state-loading" id="stateLoading"><div class="spinner"></div><div>Loading content…</div></div>
       <div class="state-placeholder visible" id="statePlaceholder"><div class="placeholder-icon" id="placeholderIcon">📄</div><div class="placeholder-title" id="placeholderTitle">Not Configured</div><div class="placeholder-body" id="placeholderBody">Add filename in toolData configuration.</div></div>
       <iframe class="modal-iframe" id="modalIframe" sandbox="allow-same-origin allow-scripts allow-popups allow-forms allow-modals"></iframe>
-      <!-- Video Player dedicated container (FIXED: ensures mp4 playback) -->
       <div class="video-container" id="videoContainer">
-        <video id="videoPlayer" class="video-element" controlsList="nodownload" preload="auto" crossorigin="anonymous"></video>
+        <video id="videoPlayer" class="video-element" preload="metadata" crossorigin="anonymous"></video>
         <div class="video-controls-bar">
           <button class="vid-play-btn" id="vidPlayBtn">▶</button>
-          <div class="vid-progress-wrap">
-            <input type="range" class="vid-progress-slider" id="vidProgress" value="0" step="0.001">
-            <div class="vid-time" id="vidTimeLabel">0:00 / 0:00</div>
-          </div>
+          <div class="vid-progress-wrap"><input type="range" class="vid-progress-slider" id="vidProgress" value="0" step="0.001"><div class="vid-time" id="vidTimeLabel">0:00 / 0:00</div></div>
           <input type="range" class="vid-volume-slider" id="vidVolume" min="0" max="1" step="0.02" value="1">
           <button class="fullscreen-btn" id="vidFullscreenBtn">⛶</button>
         </div>
@@ -176,206 +255,170 @@
   </div>
 </div>
 
-<div class="update-toast" id="updateToast" style="display:none; position:fixed; bottom:20px; right:20px; background:#004080; color:white; padding:12px 18px; border-radius:40px; z-index:9999; gap:12px; align-items:center;">
-  <span>🔄 New version ready</span><button class="toast-btn" onclick="applyUpdate()">Update</button>
-</div>
+<div id="updateToast" style="display:none; position:fixed; bottom:20px; right:20px; background:#004080; color:white; padding:12px 18px; border-radius:40px; z-index:9999; gap:12px; align-items:center;"><span>🔄 New version ready</span><button onclick="applyUpdate()" style="background:gold; border:none; padding:4px 12px; border-radius:20px; cursor:pointer;">Update</button></div>
 
 <script>
-// TOOL DATA — put actual filenames for each tool
-const toolData = [
-  { id:1, name:"Attendance Tracker", desc:"Monitor daily attendance and participation.", concept:"dms_phu_concept.html", illustration:"attendance.mp4", tool:"dms_phu.html" },
-  { id:2, name:"Data Dashboard", desc:"Real-time SBD analytics & visualization.", concept:"dms_phu_concept.html", illustration:"dms_phu.mp4", tool:"dms_phu.html" },
-  { id:3, name:"Supervisor Map", desc:"Geospatial view of distribution points.", concept:"", illustration:"", tool:"" },
-  { id:4, name:"Inventory Manager", desc:"Track ITN stocks and logistics.", concept:"", illustration:"", tool:"" },
-  { id:5, name:"Training Evaluator", desc:"Post-training assessment tool.", concept:"", illustration:"", tool:"" },
-  { id:6, name":"Resource Hub", desc:"Access guides and SOPs.", concept:"", illustration:"", tool:"" }
-];
+  // ============================================================
+  //  TOOL DATA – FULL CONFIGURATION (6 tools, edit filenames here)
+  // ============================================================
+  const toolData = [
+    { id: 1, name: "Attendance Tracker", desc: "Monitor daily attendance and participation.", concept: "dms_phu_concept.html", illustration: "attendance.mp4", tool: "dms_phu.html" },
+    { id: 2, name: "Data Dashboard", desc: "Real-time SBD analytics & visualization.", concept: "dms_phu_concept.html", illustration: "dms_phu.mp4", tool: "dms_phu.html" },
+    { id: 3, name: "Supervisor Map", desc: "Geospatial view of distribution points.", concept: "", illustration: "", tool: "" },
+    { id: 4, name: "Inventory Manager", desc: "Track ITN stocks and logistics.", concept: "", illustration: "", tool: "" },
+    { id: 5, name: "Training Evaluator", desc: "Post-training assessment tool.", concept: "", illustration: "", tool: "" },
+    { id: 6, name: "Resource Hub", desc: "Access guides, SOPs, and references.", concept: "", illustration: "", tool: "" }
+  ];
 
-// Render cards
-const arrowSVG = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>`;
-const hasFile = f => f && typeof f === 'string' && f.trim().length > 0;
+  // Helper to check if file is configured
+  const hasFile = (path) => path && typeof path === 'string' && path.trim().length > 0;
 
-const grid = document.getElementById('cardsGrid');
-grid.innerHTML = toolData.map((t, i) => `
-  <div class="card" onclick="openTool(${i})" style="animation-delay:${(i*0.05+0.05).toFixed(2)}s">
-    <div class="card-top"><div class="card-num">${t.id}</div><div class="card-name">${escapeHtml(t.name)}</div><div class="card-desc">${escapeHtml(t.desc)}</div></div>
-    <div class="card-footer"><div class="card-status"><div class="status-dot ${hasFile(t.tool) ? 'active' : ''}"></div>${hasFile(t.tool) ? 'Ready' : 'Placeholder'}</div><div class="card-arrow">${arrowSVG}</div></div>
-  </div>`).join('');
-document.getElementById('countBadge').innerText = `${toolData.length} Tools`;
-function escapeHtml(str) { return str.replace(/[&<>]/g, function(m){if(m==='&') return '&amp;'; if(m==='<') return '&lt;'; if(m==='>') return '&gt;'; return m;}); }
-
-// Modal state
-let activeIndex = null;
-let currentTab = 'concept';
-const modalOverlay = document.getElementById('modalOverlay');
-const iframeEl = document.getElementById('modalIframe');
-const loadingDiv = document.getElementById('stateLoading');
-const placeholderDiv = document.getElementById('statePlaceholder');
-const videoContainer = document.getElementById('videoContainer');
-const videoPlayer = document.getElementById('videoPlayer');
-const newTabBtn = document.getElementById('btnNewTab');
-
-function resetModalPanels() {
-  iframeEl.style.display = 'none';
-  iframeEl.src = 'about:blank';
-  videoContainer.classList.remove('visible');
-  videoPlayer.pause();
-  videoPlayer.src = '';
-  loadingDiv.classList.remove('visible');
-  placeholderDiv.classList.remove('visible');
-}
-
-async function loadTab(tab) {
-  if (activeIndex === null) return;
-  const tool = toolData[activeIndex];
-  const filename = tool[tab];
-  resetModalPanels();
-
-  const tabMeta = {
-    concept: { icon: '📖', title: 'Concept Document', defaultMsg: 'No concept file defined. Add a filename in toolData[].concept' },
-    illustration: { icon: '🎬', title: 'Illustration Video', defaultMsg: 'No illustration file specified. Supported: .mp4 video or HTML' },
-    tool: { icon: '🛠️', title: 'Tool Interface', defaultMsg: 'Tool not yet configured. Set toolData[].tool to an HTML file.' }
-  };
-  const meta = tabMeta[tab];
-  document.getElementById('placeholderIcon').innerHTML = meta.icon;
-  document.getElementById('placeholderTitle').innerText = meta.title;
-  document.getElementById('placeholderBody').innerHTML = meta.defaultMsg;
-
-  if (!hasFile(filename)) {
-    placeholderDiv.classList.add('visible');
-    newTabBtn.style.display = 'none';
-    return;
-  }
-  newTabBtn.style.display = 'flex';
-
-  // Handle MP4 video (Illustration tab most likely)
-  const isMp4 = filename.toLowerCase().endsWith('.mp4');
-  if (isMp4 && (tab === 'illustration' || true)) {
-    // video player path
-    videoContainer.classList.add('visible');
-    videoPlayer.src = filename;
-    videoPlayer.load();
-    // Reset UI elements binding
-    setupVideoControls();
-    // Autoplay hint: not forced because browsers restrict, but we show controls ready
-    videoPlayer.addEventListener('canplaythrough', () => { loadingDiv.classList.remove('visible'); }, { once: true });
-    // show loading briefly while video loads
-    loadingDiv.classList.add('visible');
-    videoPlayer.addEventListener('loadeddata', () => { loadingDiv.classList.remove('visible'); });
-    videoPlayer.onerror = () => {
-      loadingDiv.classList.remove('visible');
-      placeholderDiv.classList.add('visible');
-      document.getElementById('placeholderBody').innerHTML = `Failed to load video: ${filename}. Verify file exists in same folder.`;
-    };
-    return;
-  }
-
-  // HTML content via iframe
-  loadingDiv.classList.add('visible');
-  iframeEl.style.display = 'block';
-  iframeEl.onload = () => {
-    if (!iframeEl.src.includes('about:blank')) loadingDiv.classList.remove('visible');
-  };
-  iframeEl.onerror = () => {
-    loadingDiv.classList.remove('visible');
-    placeholderDiv.classList.add('visible');
-    document.getElementById('placeholderBody').innerHTML = `Cannot load <code>${filename}</code>. Ensure the file is in the same directory.`;
-  };
-  iframeEl.src = filename;
-}
-
-function setupVideoControls() {
-  const video = videoPlayer;
-  const progress = document.getElementById('vidProgress');
-  const timeLabel = document.getElementById('vidTimeLabel');
-  const playBtn = document.getElementById('vidPlayBtn');
-  const volumeSlider = document.getElementById('vidVolume');
-  const fullscreenBtn = document.getElementById('vidFullscreenBtn');
-
-  if (!video) return;
-  const updateProgress = () => {
-    if (video.duration && isFinite(video.duration)) {
-      progress.value = (video.currentTime / video.duration);
-      const format = (sec) => { let m = Math.floor(sec / 60); let s = Math.floor(sec % 60); return `${m}:${s.toString().padStart(2,'0')}`; };
-      timeLabel.innerText = `${format(video.currentTime)} / ${format(video.duration)}`;
+  // RENDER CARDS – this ensures they ALWAYS show
+  function renderCards() {
+    const grid = document.getElementById('cardsGrid');
+    if (!grid) {
+      console.error("CRITICAL: cardsGrid element missing!");
+      return;
     }
-  };
-  video.addEventListener('timeupdate', updateProgress);
-  video.addEventListener('loadedmetadata', () => {
-    progress.max = 1; progress.value = 0;
-    timeLabel.innerText = `0:00 / ${Math.floor(video.duration/60)}:${Math.floor(video.duration%60).toString().padStart(2,'0')}`;
-    loadingDiv.classList.remove('visible');
-  });
-  progress.addEventListener('input', () => { if (video.duration) video.currentTime = progress.value * video.duration; });
-  playBtn.innerText = '▶';
-  const togglePlay = () => {
-    if (video.paused) { video.play(); playBtn.innerText = '⏸'; }
-    else { video.pause(); playBtn.innerText = '▶'; }
-  };
-  playBtn.onclick = togglePlay;
-  video.addEventListener('play', () => { playBtn.innerText = '⏸'; });
-  video.addEventListener('pause', () => { playBtn.innerText = '▶'; });
-  video.addEventListener('ended', () => { playBtn.innerText = '▶'; progress.value = 0; });
-  volumeSlider.addEventListener('input', () => { video.volume = volumeSlider.value; });
-  fullscreenBtn.addEventListener('click', () => {
-    if (!document.fullscreenElement) videoContainer.requestFullscreen().catch(e=>console.warn);
-    else document.exitFullscreen();
-  });
-  // initial volume
-  video.volume = volumeSlider.value;
-}
-
-window.openTool = (idx) => {
-  activeIndex = idx;
-  currentTab = 'concept';
-  const t = toolData[idx];
-  document.getElementById('modalNum').innerText = t.id;
-  document.getElementById('modalTitleText').innerText = t.name.toUpperCase();
-  document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-  document.getElementById('tabConcept').classList.add('active');
-  modalOverlay.classList.add('open');
-  document.body.style.overflow = 'hidden';
-  loadTab('concept');
-};
-
-window.switchTab = (tab) => {
-  currentTab = tab;
-  document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-  document.getElementById(`tab${tab.charAt(0).toUpperCase() + tab.slice(1)}`).classList.add('active');
-  loadTab(tab);
-};
-
-window.closeModal = () => {
-  modalOverlay.classList.remove('open');
-  document.body.style.overflow = '';
-  if (videoPlayer) { videoPlayer.pause(); videoPlayer.src = ''; }
-  iframeEl.src = 'about:blank';
-  videoContainer.classList.remove('visible');
-  activeIndex = null;
-};
-
-window.openNewTab = () => {
-  if (activeIndex !== null) {
-    const file = toolData[activeIndex][currentTab];
-    if (hasFile(file)) window.open(file, '_blank');
+    const arrowSVG = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>`;
+    let html = '';
+    for (let i = 0; i < toolData.length; i++) {
+      const t = toolData[i];
+      const isReady = hasFile(t.tool);
+      html += `
+        <div class="card" onclick="openTool(${i})" style="animation-delay:${(i * 0.05 + 0.05).toFixed(2)}s">
+          <div class="card-top">
+            <div class="card-num">${t.id}</div>
+            <div class="card-name">${escapeHtml(t.name)}</div>
+            <div class="card-desc">${escapeHtml(t.desc)}</div>
+          </div>
+          <div class="card-footer">
+            <div class="card-status"><div class="status-dot ${isReady ? 'active' : ''}"></div>${isReady ? 'Ready' : 'Placeholder'}</div>
+            <div class="card-arrow">${arrowSVG}</div>
+          </div>
+        </div>`;
+    }
+    grid.innerHTML = html;
+    document.getElementById('countBadge').innerText = `${toolData.length} Tools`;
+    console.log(`✅ Rendered ${toolData.length} cards successfully`);
   }
-};
-modalOverlay.addEventListener('click', (e) => { if (e.target === modalOverlay) closeModal(); });
-document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
 
-// PWA install & service worker
-let deferredPrompt = null;
-window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredPrompt = e; });
-window.installPWA = async () => { if (deferredPrompt) { deferredPrompt.prompt(); const { outcome } = await deferredPrompt.userChoice; if (outcome === 'accepted') document.getElementById('pwaInstallBtn').classList.add('installed'); deferredPrompt = null; } };
-if (window.matchMedia('(display-mode: standalone)').matches) document.getElementById('pwaInstallBtn').classList.add('installed');
+  function escapeHtml(str) { return str.replace(/[&<>]/g, function(m){ if(m==='&') return '&amp;'; if(m==='<') return '&lt;'; if(m==='>') return '&gt;'; return m;}); }
 
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./sw.js').then(reg => {
-    reg.addEventListener('updatefound', () => { const newWorker = reg.installing; newWorker.addEventListener('statechange', () => { if (newWorker.state === 'installed' && navigator.serviceWorker.controller) document.getElementById('updateToast').style.display = 'flex'; }); });
-    if (reg.waiting && navigator.serviceWorker.controller) document.getElementById('updateToast').style.display = 'flex';
-  }).catch(e => console.warn);
-}
-window.applyUpdate = () => { const toast = document.getElementById('updateToast'); if (window.newWorkerGlobal) window.newWorkerGlobal.postMessage({type:'SKIP_WAITING'}); toast.style.display = 'none'; window.location.reload(); };
+  // Modal logic
+  let activeIndex = null;
+  let currentTab = 'concept';
+  const modalOverlay = document.getElementById('modalOverlay');
+  const iframeEl = document.getElementById('modalIframe');
+  const loadingDiv = document.getElementById('stateLoading');
+  const placeholderDiv = document.getElementById('statePlaceholder');
+  const videoContainer = document.getElementById('videoContainer');
+  const videoPlayer = document.getElementById('videoPlayer');
+  const newTabBtn = document.getElementById('btnNewTab');
+
+  function resetPanels() {
+    iframeEl.style.display = 'none';
+    iframeEl.src = 'about:blank';
+    videoContainer.classList.remove('visible');
+    if (videoPlayer) { videoPlayer.pause(); videoPlayer.src = ''; }
+    loadingDiv.classList.remove('visible');
+    placeholderDiv.classList.remove('visible');
+  }
+
+  function setupVideoControlsOnce() {
+    const progress = document.getElementById('vidProgress');
+    const timeLabel = document.getElementById('vidTimeLabel');
+    const playBtn = document.getElementById('vidPlayBtn');
+    const volumeSlider = document.getElementById('vidVolume');
+    const fullscreenBtn = document.getElementById('vidFullscreenBtn');
+    if (!playBtn) return;
+    const updateUI = () => {
+      if (!videoPlayer.duration || !isFinite(videoPlayer.duration)) return;
+      progress.value = videoPlayer.currentTime / videoPlayer.duration;
+      const fmt = (sec) => { let m = Math.floor(sec / 60); let s = Math.floor(sec % 60); return `${m}:${s.toString().padStart(2,'0')}`; };
+      timeLabel.innerText = `${fmt(videoPlayer.currentTime)} / ${fmt(videoPlayer.duration)}`;
+    };
+    videoPlayer.addEventListener('timeupdate', updateUI);
+    videoPlayer.addEventListener('loadedmetadata', () => {
+      progress.max = 1;
+      timeLabel.innerText = `0:00 / ${Math.floor(videoPlayer.duration/60)}:${Math.floor(videoPlayer.duration%60).toString().padStart(2,'0')}`;
+      loadingDiv.classList.remove('visible');
+    });
+    progress.addEventListener('input', () => { if (videoPlayer.duration) videoPlayer.currentTime = progress.value * videoPlayer.duration; });
+    playBtn.onclick = () => { videoPlayer.paused ? videoPlayer.play() : videoPlayer.pause(); };
+    videoPlayer.onplay = () => { playBtn.innerText = '⏸'; };
+    videoPlayer.onpause = () => { playBtn.innerText = '▶'; };
+    videoPlayer.onended = () => { playBtn.innerText = '▶'; progress.value = 0; };
+    volumeSlider.addEventListener('input', () => { videoPlayer.volume = volumeSlider.value; });
+    fullscreenBtn.addEventListener('click', () => { if (!document.fullscreenElement) videoContainer.requestFullscreen(); else document.exitFullscreen(); });
+  }
+
+  async function loadTab(tab) {
+    if (activeIndex === null) return;
+    const tool = toolData[activeIndex];
+    const filename = tool[tab];
+    resetPanels();
+    const metaMap = {
+      concept: { icon: '📖', title: 'Concept Document', msg: 'No concept file. Set toolData[x].concept' },
+      illustration: { icon: '🎬', title: 'Video / Illustration', msg: 'No illustration file. Add .mp4 or HTML' },
+      tool: { icon: '🛠️', title: 'Interactive Tool', msg: 'No tool configured. Set toolData[x].tool' }
+    };
+    const meta = metaMap[tab];
+    document.getElementById('placeholderIcon').innerHTML = meta.icon;
+    document.getElementById('placeholderTitle').innerText = meta.title;
+    document.getElementById('placeholderBody').innerHTML = meta.msg;
+
+    if (!hasFile(filename)) { placeholderDiv.classList.add('visible'); newTabBtn.style.display = 'none'; return; }
+    newTabBtn.style.display = 'flex';
+
+    // MP4 handling (illustration)
+    if (filename.toLowerCase().endsWith('.mp4')) {
+      videoContainer.classList.add('visible');
+      videoPlayer.src = filename;
+      videoPlayer.load();
+      loadingDiv.classList.add('visible');
+      videoPlayer.oncanplaythrough = () => loadingDiv.classList.remove('visible');
+      videoPlayer.onerror = () => { loadingDiv.classList.remove('visible'); placeholderDiv.classList.add('visible'); document.getElementById('placeholderBody').innerHTML = `Failed to load video: ${filename}. Check file path.`; };
+      setupVideoControlsOnce();
+      return;
+    }
+
+    // HTML / other content -> iframe
+    loadingDiv.classList.add('visible');
+    iframeEl.style.display = 'block';
+    iframeEl.onload = () => { if (!iframeEl.src.includes('about:blank')) loadingDiv.classList.remove('visible'); };
+    iframeEl.onerror = () => { loadingDiv.classList.remove('visible'); placeholderDiv.classList.add('visible'); document.getElementById('placeholderBody').innerHTML = `Cannot load <code>${filename}</code>. Ensure file exists.`; };
+    iframeEl.src = filename;
+  }
+
+  window.openTool = (idx) => {
+    activeIndex = idx;
+    currentTab = 'concept';
+    const t = toolData[idx];
+    document.getElementById('modalNum').innerText = t.id;
+    document.getElementById('modalTitleText').innerText = t.name.toUpperCase();
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+    document.getElementById('tabConcept').classList.add('active');
+    modalOverlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    loadTab('concept');
+  };
+  window.switchTab = (tab) => { currentTab = tab; document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active')); document.getElementById(`tab${tab.charAt(0).toUpperCase() + tab.slice(1)}`).classList.add('active'); loadTab(tab); };
+  window.closeModal = () => { modalOverlay.classList.remove('open'); document.body.style.overflow = ''; if (videoPlayer) videoPlayer.pause(); activeIndex = null; };
+  window.openNewTab = () => { if (activeIndex !== null) { const file = toolData[activeIndex][currentTab]; if (hasFile(file)) window.open(file, '_blank'); } };
+  modalOverlay.addEventListener('click', (e) => { if (e.target === modalOverlay) closeModal(); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
+
+  // PWA + Service Worker (optional, no SW = no error)
+  let deferredPrompt = null;
+  window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredPrompt = e; });
+  window.installPWA = async () => { if (deferredPrompt) { deferredPrompt.prompt(); const { outcome } = await deferredPrompt.userChoice; if (outcome === 'accepted') document.getElementById('pwaInstallBtn').classList.add('installed'); deferredPrompt = null; } };
+  if (window.matchMedia('(display-mode: standalone)').matches) document.getElementById('pwaInstallBtn').classList.add('installed');
+  if ('serviceWorker' in navigator) { navigator.serviceWorker.register('./sw.js').catch(e => console.log("SW not used")); }
+  window.applyUpdate = () => { document.getElementById('updateToast').style.display = 'none'; window.location.reload(); };
+
+  // INITIALIZE: render cards on load
+  renderCards();
 </script>
 </body>
 </html>
