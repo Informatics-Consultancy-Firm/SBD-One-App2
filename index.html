@@ -8,6 +8,7 @@
 <!-- PWA Meta -->
 <meta name="description" content="ICF-SL Data Management and Analysis Tools for SBD Campaign 2026">
 <meta name="theme-color" content="#004080">
+<meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="ICF Tools">
@@ -97,7 +98,7 @@
   .grid-label::before { content: ''; width: 18px; height: 2px; background: var(--gold); border-radius: 2px; }
   .count-badge { background: var(--navy); color: white; font-size: 10px; font-weight: 700; padding: 3px 10px; border-radius: 20px; }
   
-  /* CARDS GRID – 3 columns, fully responsive */
+  /* CARDS GRID */
   .cards-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -180,7 +181,7 @@
   .video-container { position: absolute; inset: 0; display: none; flex-direction: column; background: #000; }
   .video-container.visible { display: flex; }
   .video-element { width: 100%; height: 100%; object-fit: contain; flex: 1; background: black; }
-  .video-controls-bar { background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); padding: 10px 20px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; border-top: 1px solid rgba(255,255,255,0.2); }
+  .video-controls-bar { background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); padding: 10px 20px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; border-top: 1px solid rgba(255,255,255,0.2); }
   .vid-play-btn { background: var(--gold); border: none; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; transition: 0.2s; flex-shrink: 0; }
   .vid-progress-wrap { flex: 1; min-width: 120px; }
   .vid-progress-slider { width: 100%; height: 5px; -webkit-appearance: none; background: rgba(255,255,255,0.3); border-radius: 5px; cursor: pointer; }
@@ -216,7 +217,7 @@
 <div class="hero-band">
   <div class="hero-tag">SBD Campaign 2026</div>
   <h1>My <em>Tools</em></h1>
-  <p>School Based Distribution of ITNs — Sierra Leone. Click any card to open full documentation, video illustration, or interactive tool.</p>
+  <p>School Based Distribution of ITNs — Sierra Leone. Click any card to open documentation, training video, or interactive tool.</p>
 </div>
 
 <main class="main">
@@ -241,7 +242,7 @@
     <div class="modal-body">
       <div class="state-loading" id="stateLoading"><div class="spinner"></div><div>Loading content…</div></div>
       <div class="state-placeholder visible" id="statePlaceholder"><div class="placeholder-icon" id="placeholderIcon">📄</div><div class="placeholder-title" id="placeholderTitle">Not Configured</div><div class="placeholder-body" id="placeholderBody">Add filename in toolData configuration.</div></div>
-      <iframe class="modal-iframe" id="modalIframe" sandbox="allow-same-origin allow-scripts allow-popups allow-forms allow-modals"></iframe>
+      <iframe class="modal-iframe" id="modalIframe" sandbox="allow-same-origin allow-scripts allow-popups allow-forms allow-modals allow-downloads"></iframe>
       <div class="video-container" id="videoContainer">
         <video id="videoPlayer" class="video-element" preload="metadata" crossorigin="anonymous"></video>
         <div class="video-controls-bar">
@@ -259,7 +260,7 @@
 
 <script>
   // ============================================================
-  //  TOOL DATA – FULL CONFIGURATION (6 tools, edit filenames here)
+  //  TOOL DATA – EDIT THESE FILENAMES TO MATCH YOUR FILES
   // ============================================================
   const toolData = [
     { id: 1, name: "Attendance Tracker", desc: "Monitor daily attendance and participation.", concept: "dms_phu_concept.html", illustration: "attendance.mp4", tool: "dms_phu.html" },
@@ -270,16 +271,12 @@
     { id: 6, name: "Resource Hub", desc: "Access guides, SOPs, and references.", concept: "", illustration: "", tool: "" }
   ];
 
-  // Helper to check if file is configured
   const hasFile = (path) => path && typeof path === 'string' && path.trim().length > 0;
 
-  // RENDER CARDS – this ensures they ALWAYS show
+  // Render cards
   function renderCards() {
     const grid = document.getElementById('cardsGrid');
-    if (!grid) {
-      console.error("CRITICAL: cardsGrid element missing!");
-      return;
-    }
+    if (!grid) { console.error("cardsGrid not found"); return; }
     const arrowSVG = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>`;
     let html = '';
     for (let i = 0; i < toolData.length; i++) {
@@ -300,12 +297,11 @@
     }
     grid.innerHTML = html;
     document.getElementById('countBadge').innerText = `${toolData.length} Tools`;
-    console.log(`✅ Rendered ${toolData.length} cards successfully`);
   }
 
   function escapeHtml(str) { return str.replace(/[&<>]/g, function(m){ if(m==='&') return '&amp;'; if(m==='<') return '&lt;'; if(m==='>') return '&gt;'; return m;}); }
 
-  // Modal logic
+  // Modal state
   let activeIndex = null;
   let currentTab = 'concept';
   const modalOverlay = document.getElementById('modalOverlay');
@@ -325,23 +321,27 @@
     placeholderDiv.classList.remove('visible');
   }
 
-  function setupVideoControlsOnce() {
+  // Setup video controls (called once)
+  function setupVideoControls() {
     const progress = document.getElementById('vidProgress');
     const timeLabel = document.getElementById('vidTimeLabel');
     const playBtn = document.getElementById('vidPlayBtn');
     const volumeSlider = document.getElementById('vidVolume');
     const fullscreenBtn = document.getElementById('vidFullscreenBtn');
     if (!playBtn) return;
-    const updateUI = () => {
+    
+    const updateProgress = () => {
       if (!videoPlayer.duration || !isFinite(videoPlayer.duration)) return;
       progress.value = videoPlayer.currentTime / videoPlayer.duration;
       const fmt = (sec) => { let m = Math.floor(sec / 60); let s = Math.floor(sec % 60); return `${m}:${s.toString().padStart(2,'0')}`; };
       timeLabel.innerText = `${fmt(videoPlayer.currentTime)} / ${fmt(videoPlayer.duration)}`;
     };
-    videoPlayer.addEventListener('timeupdate', updateUI);
+    
+    videoPlayer.addEventListener('timeupdate', updateProgress);
     videoPlayer.addEventListener('loadedmetadata', () => {
       progress.max = 1;
-      timeLabel.innerText = `0:00 / ${Math.floor(videoPlayer.duration/60)}:${Math.floor(videoPlayer.duration%60).toString().padStart(2,'0')}`;
+      const fmt = (sec) => { let m = Math.floor(sec / 60); let s = Math.floor(sec % 60); return `${m}:${s.toString().padStart(2,'0')}`; };
+      timeLabel.innerText = `0:00 / ${fmt(videoPlayer.duration)}`;
       loadingDiv.classList.remove('visible');
     });
     progress.addEventListener('input', () => { if (videoPlayer.duration) videoPlayer.currentTime = progress.value * videoPlayer.duration; });
@@ -358,9 +358,10 @@
     const tool = toolData[activeIndex];
     const filename = tool[tab];
     resetPanels();
+    
     const metaMap = {
       concept: { icon: '📖', title: 'Concept Document', msg: 'No concept file. Set toolData[x].concept' },
-      illustration: { icon: '🎬', title: 'Video / Illustration', msg: 'No illustration file. Add .mp4 or HTML' },
+      illustration: { icon: '🎬', title: 'Video / Illustration', msg: 'No illustration file. Add .mp4 file in same folder' },
       tool: { icon: '🛠️', title: 'Interactive Tool', msg: 'No tool configured. Set toolData[x].tool' }
     };
     const meta = metaMap[tab];
@@ -371,19 +372,28 @@
     if (!hasFile(filename)) { placeholderDiv.classList.add('visible'); newTabBtn.style.display = 'none'; return; }
     newTabBtn.style.display = 'flex';
 
-    // MP4 handling (illustration)
+    // Handle MP4 video files
     if (filename.toLowerCase().endsWith('.mp4')) {
       videoContainer.classList.add('visible');
-      videoPlayer.src = filename;
+      // Construct correct path - use filename as-is (same folder)
+      let videoPath = filename;
+      console.log("🎬 Loading video:", videoPath);
+      videoPlayer.src = videoPath;
       videoPlayer.load();
       loadingDiv.classList.add('visible');
-      videoPlayer.oncanplaythrough = () => loadingDiv.classList.remove('visible');
-      videoPlayer.onerror = () => { loadingDiv.classList.remove('visible'); placeholderDiv.classList.add('visible'); document.getElementById('placeholderBody').innerHTML = `Failed to load video: ${filename}. Check file path.`; };
-      setupVideoControlsOnce();
+      
+      videoPlayer.oncanplaythrough = () => { loadingDiv.classList.remove('visible'); };
+      videoPlayer.onerror = (e) => { 
+        console.error("Video error:", e);
+        loadingDiv.classList.remove('visible'); 
+        placeholderDiv.classList.add('visible'); 
+        document.getElementById('placeholderBody').innerHTML = `Failed to load video: ${filename}<br><br>Make sure the file exists in the same folder as this HTML file.`;
+      };
+      setupVideoControls();
       return;
     }
 
-    // HTML / other content -> iframe
+    // HTML content via iframe
     loadingDiv.classList.add('visible');
     iframeEl.style.display = 'block';
     iframeEl.onload = () => { if (!iframeEl.src.includes('about:blank')) loadingDiv.classList.remove('visible'); };
@@ -403,22 +413,42 @@
     document.body.style.overflow = 'hidden';
     loadTab('concept');
   };
-  window.switchTab = (tab) => { currentTab = tab; document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active')); document.getElementById(`tab${tab.charAt(0).toUpperCase() + tab.slice(1)}`).classList.add('active'); loadTab(tab); };
-  window.closeModal = () => { modalOverlay.classList.remove('open'); document.body.style.overflow = ''; if (videoPlayer) videoPlayer.pause(); activeIndex = null; };
-  window.openNewTab = () => { if (activeIndex !== null) { const file = toolData[activeIndex][currentTab]; if (hasFile(file)) window.open(file, '_blank'); } };
+  
+  window.switchTab = (tab) => { 
+    currentTab = tab; 
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active')); 
+    document.getElementById(`tab${tab.charAt(0).toUpperCase() + tab.slice(1)}`).classList.add('active'); 
+    loadTab(tab); 
+  };
+  
+  window.closeModal = () => { 
+    modalOverlay.classList.remove('open'); 
+    document.body.style.overflow = ''; 
+    if (videoPlayer) videoPlayer.pause(); 
+    activeIndex = null; 
+  };
+  
+  window.openNewTab = () => { 
+    if (activeIndex !== null) { 
+      const file = toolData[activeIndex][currentTab]; 
+      if (hasFile(file)) window.open(file, '_blank'); 
+    } 
+  };
+  
   modalOverlay.addEventListener('click', (e) => { if (e.target === modalOverlay) closeModal(); });
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
 
-  // PWA + Service Worker (optional, no SW = no error)
+  // PWA
   let deferredPrompt = null;
   window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredPrompt = e; });
   window.installPWA = async () => { if (deferredPrompt) { deferredPrompt.prompt(); const { outcome } = await deferredPrompt.userChoice; if (outcome === 'accepted') document.getElementById('pwaInstallBtn').classList.add('installed'); deferredPrompt = null; } };
   if (window.matchMedia('(display-mode: standalone)').matches) document.getElementById('pwaInstallBtn').classList.add('installed');
-  if ('serviceWorker' in navigator) { navigator.serviceWorker.register('./sw.js').catch(e => console.log("SW not used")); }
+  if ('serviceWorker' in navigator) { navigator.serviceWorker.register('./sw.js').catch(e => console.log("SW optional")); }
   window.applyUpdate = () => { document.getElementById('updateToast').style.display = 'none'; window.location.reload(); };
 
-  // INITIALIZE: render cards on load
+  // Initialize
   renderCards();
+  console.log("✅ App ready - videos will load from same folder as HTML");
 </script>
 </body>
 </html>
