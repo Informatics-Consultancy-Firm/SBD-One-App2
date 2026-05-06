@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Remote Training — ICF-SL | Visual Tab Selector</title>
+    <meta name="description" content="Video Training Platform with prominent tab buttons">
+    <meta name="theme-color" content="#004080">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #f0f4f8;
+            color: #1a2840;
+            overflow-x: hidden;
+        }
+
+        /* ════════════════════════════════════════════════════════
+           HEADER
+        ════════════════════════════════════════════════════════ */
+        .rt-header {
+            background: linear-gradient(135deg, #002d5a 0%, #004080 100%);
+            color: #fff;
+            padding: 24px 20px;
+            text-align: center;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .rt-logo {
+            height: 48px;
+            object-fit: contain;
+            margin-bottom: 10px;
+        }
+
+        .rt-title {
+            font-family: 'Oswald', sans-serif;
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        .rt-subtitle {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.8);
+            letter-spacing: 0.5px;
+        }
+
+        /* ════════════════════════════════════════════════════════
+           TAB BUTTONS — MEDIUM SIZE, VISIBLE, MODERN CARD STYLE
+        ════════════════════════════════════════════════════════ */
+        .rt-tab-bar {
+            background: #ffffff;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 16px 20px 0 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+
+        .rt-tab-buttons {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 14px;
+        }
+
+        .rt-tab-btn {
+            flex: 0 1 auto;
+            min-width: 130px;
+            padding: 12px 24px;
+            background: #f1f5f9;
+            border: none;
+            border-radius: 60px;
+            font-family: 'Oswald', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+            color: #1e3a5f;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        }
+
+        .rt-tab-btn svg {
+            width: 18px;
+            height: 18px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+            transition: all 0.2s;
+        }
+
+        .rt-tab-btn:hover {
+            background: #e2eaf3;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 64, 128, 0.1);
+        }
+
+        .rt-tab-btn.active {
+            background: #004080;
+            color: #ffc107;
+            box-shadow: 0 4px 12px rgba(0, 64, 128, 0.3);
+        }
+
+        .rt-tab-btn.active svg {
+            stroke: #ffc107;
+        }
+
+        /* Responsive: smaller buttons on mobile */
+        @media (max-width: 640px) {
+            .rt-tab-buttons {
+                gap: 10px;
+            }
+            .rt-tab-btn {
+                min-width: 100px;
+                padding: 8px 16px;
+                font-size: 11px;
+            }
+            .rt-tab-btn svg {
+                width: 14px;
+                height: 14px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .rt-tab-btn {
+                min-width: 85px;
+                padding: 7px 12px;
+                font-size: 10px;
+            }
+            .rt-tab-btn span {
+                font-size: 10px;
+            }
+        }
+
+        /* ════════════════════════════════════════════════════════
+           MAIN CONTAINER
+        ════════════════════════════════════════════════════════ */
+        .rt-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 32px 20px;
+        }
+
+        .rt-panel {
+            display: none;
+            animation: panelFade 0.25s ease;
+        }
+
+        .rt-panel.active {
+            display: block;
+        }
+
+        @keyframes panelFade {
+            from { opacity: 0; transform: translateY(8px);}
+            to { opacity: 1; transform: translateY(0);}
+        }
+
+        /* ════════════════════════════════════════════════════════
+           INTRO SECTION (per panel)
+        ════════════════════════════════════════════════════════ */
+        .rt-intro {
+            background: #fff;
+            border: 2px solid #d0dce8;
+            border-radius: 20px;
+            padding: 28px 32px;
+            margin-bottom: 32px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+        }
+
+        .rt-intro-icon {
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, #004080, #1a6abf);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+        }
+
+        .rt-intro-icon svg {
+            width: 32px;
+            height: 32px;
+            stroke: #fff;
+            fill: none;
+            stroke-width: 1.5;
+        }
+
+        .rt-intro h2 {
+            font-family: 'Oswald', sans-serif;
+            font-size: 24px;
+            font-weight: 700;
+            color: #004080;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+        }
+
+        .rt-intro p {
+            font-size: 15px;
+            line-height: 1.6;
+            color: #4a627a;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* ════════════════════════════════════════════════════════
+           VIDEO GRID
+        ════════════════════════════════════════════════════════ */
+        .rt-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .rt-video-card {
+            background: #fff;
+            border-radius: 20px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.2, 0, 0, 1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e2edf7;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .rt-video-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 28px -12px rgba(0, 64, 128, 0.2);
+            border-color: #004080;
+        }
+
+        .rt-video-thumb {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            background: linear-gradient(125deg, #002d5a, #00509e);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .rt-video-thumb svg {
+            width: 52px;
+            height: 52px;
+            stroke: rgba(255, 255, 255, 0.4);
+            fill: none;
+        }
+
+        .rt-play-btn {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            background: #ffc107;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.25s;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .rt-play-btn svg {
+            width: 26px;
+            height: 26px;
+            fill: #004080;
+            stroke: none;
+            margin-left: 3px;
+        }
+
+        .rt-video-card:hover .rt-play-btn {
+            background: #ffda44;
+            transform: scale(1.08);
+        }
+
+        .rt-video-info {
+            padding: 20px;
+            flex: 1;
+        }
+
+        .rt-video-duration {
+            display: inline-block;
+            background: #eef3fc;
+            color: #004080;
+            font-family: 'Oswald', sans-serif;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.4px;
+            padding: 4px 10px;
+            border-radius: 30px;
+            margin-bottom: 10px;
+        }
+
+        .rt-video-title {
+            font-family: 'Oswald', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            color: #002d5a;
+            letter-spacing: 0.3px;
+            margin-bottom: 8px;
+            line-height: 1.35;
+        }
+
+        .rt-video-desc {
+            font-size: 13px;
+            color: #5a6f88;
+            line-height: 1.5;
+        }
+
+        /* ════════════════════════════════════════════════════════
+           FULLSCREEN MODAL — OPTIMIZED VIEW
+        ════════════════════════════════════════════════════════ */
+        .rt-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: #000000;
+            z-index: 10000;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.2s ease;
+        }
+
+        .rt-modal.show {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .rt-modal-content {
+            width: 100%;
+            height: 100%;
+            background: #000;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .rt-video-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #000;
+            width: 100%;
+            min-height: 0;
+        }
+
+        .rt-video-player {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: block;
+            cursor: pointer;
+        }
+
+        .rt-modal-info {
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(12px);
+            padding: 14px 20px;
+            color: white;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .rt-modal-title {
+            font-family: 'Oswald', sans-serif;
+            font-size: 17px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            color: #ffc107;
+            margin-bottom: 5px;
+        }
+
+        .rt-modal-desc {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.85);
+            line-height: 1.4;
+            margin-bottom: 6px;
+        }
+
+        .rt-modal-meta {
+            display: flex;
+            gap: 16px;
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.65);
+        }
+
+        .rt-close-btn {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            width: 46px;
+            height: 46px;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            color: white;
+            font-size: 26px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            z-index: 10001;
+        }
+
+        .rt-close-btn:hover {
+            background: #ffc107;
+            color: #002d5a;
+            transform: scale(1.03);
+        }
+
+        .rt-fs-toggle {
+            position: absolute;
+            bottom: 22px;
+            right: 22px;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 40px;
+            padding: 10px 18px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: white;
+            font-size: 13px;
+            font-family: 'Oswald', sans-serif;
+            font-weight: 500;
+            cursor: pointer;
+            z-index: 10001;
+            transition: all 0.2s;
+        }
+
+        .rt-fs-toggle:hover {
+            background: #ffc107;
+            color: #002d5a;
+            border-color: #ffc107;
+        }
+
+        .rt-fs-toggle svg {
+            width: 18px;
+            height: 18px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+        }
+
+        /* Empty state */
+        .rt-empty {
+            text-align: center;
+            padding: 60px 20px;
+            background: #fff;
+            border-radius: 20px;
+        }
+
+        .rt-empty-icon {
+            width: 80px;
+            height: 80px;
+            background: #eef3fc;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+        }
+
+        .rt-empty-icon svg {
+            width: 40px;
+            height: 40px;
+            stroke: #004080;
+        }
+
+        /* Footer */
+        .rt-footer {
+            background: linear-gradient(135deg, #002d5a, #004080);
+            color: rgba(255, 255, 255, 0.8);
+            text-align: center;
+            padding: 18px;
+            font-size: 12px;
+            font-family: 'Oswald', sans-serif;
+        }
+
+        @media (max-width: 768px) {
+            .rt-container {
+                padding: 24px 16px;
+            }
+            .rt-intro {
+                padding: 20px;
+            }
+            .rt-grid {
+                gap: 18px;
+            }
+            .rt-modal-info {
+                padding: 12px 16px;
+            }
+        }
+
+        @media (max-height: 550px) {
+            .rt-modal-info {
+                padding: 8px 14px;
+            }
+            .rt-modal-title {
+                font-size: 14px;
+            }
+            .rt-modal-desc {
+                font-size: 11px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="rt-header">
+        <img src="ICF-SL.jpg" alt="ICF-SL" class="rt-logo" onerror="this.style.display='none';">
+        <div class="rt-title">REMOTE TRAINING</div>
+        <div class="rt-subtitle">ICF-SL Video Learning Platform</div>
+    </div>
+
+    <!-- MEDIUM VISIBLE TAB BUTTONS (MODERN PILL DESIGN) -->
+    <div class="rt-tab-bar">
+        <div class="rt-tab-buttons" id="tabButtonsContainer">
+            <button class="rt-tab-btn active" data-tab="overview">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/><path d="M12 6v6l4 2"/></svg>
+                <span>Overview</span>
+            </button>
+            <button class="rt-tab-btn" data-tab="data-entry">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                <span>Data Entry</span>
+            </button>
+            <button class="rt-tab-btn" data-tab="analysis">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18 20V10M12 20V4M6 20v-6"/><path d="M2 20h20"/></svg>
+                <span>Analysis</span>
+            </button>
+            <button class="rt-tab-btn" data-tab="monitoring">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/><circle cx="12" cy="10" r="2"/></svg>
+                <span>Monitoring</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT PANELS -->
+    <div class="rt-container">
+        <div class="rt-panel active" id="panel-overview">
+            <div class="rt-intro">
+                <div class="rt-intro-icon"><svg viewBox="0 0 24 24"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg></div>
+                <h2>Welcome to Remote Training</h2>
+                <p>Access our comprehensive video training library. Select a module above to get started with on-demand video content.</p>
+            </div>
+            <div class="rt-grid" id="overview-videos"></div>
+        </div>
+
+        <div class="rt-panel" id="panel-data-entry">
+            <div class="rt-intro">
+                <div class="rt-intro-icon"><svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></div>
+                <h2>Data Entry Training</h2>
+                <p>Learn how to properly enter school data using the ICF Collect form. Step-by-step tutorials.</p>
+            </div>
+            <div class="rt-grid" id="data-entry-videos"></div>
+        </div>
+
+        <div class="rt-panel" id="panel-analysis">
+            <div class="rt-intro">
+                <div class="rt-intro-icon"><svg viewBox="0 0 24 24"><path d="M18 20V10M12 20V4M6 20v-6"/><path d="M2 20h20"/></svg></div>
+                <h2>Analysis Dashboard</h2>
+                <p>Understand how to interpret data, view dashboards, and generate reports from collected information.</p>
+            </div>
+            <div class="rt-grid" id="analysis-videos"></div>
+        </div>
+
+        <div class="rt-panel" id="panel-monitoring">
+            <div class="rt-intro">
+                <div class="rt-intro-icon"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/><circle cx="12" cy="10" r="2"/></svg></div>
+                <h2>Monitoring & Quality</h2>
+                <p>Training on data quality assurance, field monitoring, and quality control procedures.</p>
+            </div>
+            <div class="rt-grid" id="monitoring-videos"></div>
+        </div>
+    </div>
+
+    <!-- VIDEO MODAL -->
+    <div class="rt-modal" id="videoModal" onclick="if(event.target===this) closeModal()">
+        <button class="rt-close-btn" onclick="closeModal()">✕</button>
+        <div class="rt-modal-content">
+            <div class="rt-video-container">
+                <video class="rt-video-player" id="videoPlayer" controls playsinline></video>
+            </div>
+            <div class="rt-modal-info">
+                <div class="rt-modal-title" id="modalTitle">Video Title</div>
+                <div class="rt-modal-desc" id="modalDesc">Description</div>
+                <div class="rt-modal-meta">
+                    <span>Duration: <strong id="modalDuration">0:00</strong></span>
+                    <span>Module: <strong id="modalModule">Overview</strong></span>
+                </div>
+            </div>
+            <div class="rt-fs-toggle" id="fullscreenToggleBtn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M8 3H5a2 2 0 00-2 2v3m18 0V5a2 2 0 00-2-2h-3m0 18h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3"/></svg>
+                <span>Fullscreen</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="rt-footer">
+        Developed by <strong>ICF-SL</strong> · Remote Training Platform · 2026
+    </div>
+
+    <script>
+        // ---------- VIDEO LIBRARY (public sample videos for demonstration) ----------
+        const TRAINING_VIDEOS = {
+            overview: [
+                { id: 'intro-01', title: 'Welcome to ICF Training', description: 'Introduction to the remote training platform and how to navigate.', url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4', duration: '3:45', module: 'Overview' },
+                { id: 'intro-02', title: 'Platform Overview', description: 'Complete walkthrough of all training modules, dashboard and features.', url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4', duration: '5:20', module: 'Overview' },
+            ],
+            'data-entry': [
+                { id: 'de-01', title: 'Form Navigation', description: 'How to navigate through the data entry form sections efficiently.', url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFunflies.mp4', duration: '4:15', module: 'Data Entry' },
+                { id: 'de-02', title: 'School Identification', description: 'Learn QR scanning and manual entry methods for school selection.', url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4', duration: '6:30', module: 'Data Entry' },
+                { id: 'de-03', title: 'Enrollment & ITN Data', description: 'Step-by-step guide to entering class enrollment and ITN distribution numbers.', url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4', duration: '7:45', module: 'Data Entry' },
+            ],
+            analysis: [
+                { id: 'an-01', title: 'Dashboard Overview', description: 'Introduction to the analysis dashboard and key metrics visualization.', url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4', duration: '5:00', module: 'Analysis' },
+                { id: 'an-02', title: 'Generating Reports', description: 'How to generate and export data reports from the system.', url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WhatCar.mp4', duration: '8:15', module: 'Analysis' },
+            ],
+            monitoring: [
+                { id: 'mon-01', title: 'Data Quality Checks', description: 'Understanding data quality assessment and validation procedures.', url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4', duration: '6:45', module: 'Monitoring' },
+                { id: 'mon-02', title: 'Field Monitoring', description: 'Guide to conducting field monitoring and supervision visits.', url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4', duration: '7:30', module: 'Monitoring' },
+            ]
+        };
+
+        // Helper: Render video grid inside a specific container
+        function renderVideos(tabKey, containerId) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            const videos = TRAINING_VIDEOS[tabKey] || [];
+            if (!videos.length) {
+                container.innerHTML = `<div style="grid-column:1/-1;"><div class="rt-empty"><div class="rt-empty-icon"><svg viewBox="0 0 24 24"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg></div><h3>No Videos Yet</h3><p>Training videos will appear here soon.</p></div></div>`;
+                return;
+            }
+            container.innerHTML = videos.map(v => `
+                <div class="rt-video-card" onclick="playVideo('${v.id}', '${tabKey}')">
+                    <div class="rt-video-thumb">
+                        <div class="rt-play-btn"><svg viewBox="0 0 24 24"><path d="M5 3l14 9-14 9V3z"/></svg></div>
+                    </div>
+                    <div class="rt-video-info">
+                        <div class="rt-video-duration">${v.duration}</div>
+                        <div class="rt-video-title">${escapeHtml(v.title)}</div>
+                        <div class="rt-video-desc">${escapeHtml(v.description)}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function escapeHtml(str) {
+            return str.replace(/[&<>]/g, function(m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                return m;
+            });
+        }
+
+        // Switch tab logic with button styling and panel activation
+        function switchToTab(tabId) {
+            // Update panels
+            document.querySelectorAll('.rt-panel').forEach(panel => panel.classList.remove('active'));
+            const activePanel = document.getElementById(`panel-${tabId}`);
+            if (activePanel) activePanel.classList.add('active');
+
+            // Update buttons active state
+            document.querySelectorAll('.rt-tab-btn').forEach(btn => {
+                const btnTab = btn.getAttribute('data-tab');
+                if (btnTab === tabId) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+
+            // Lazy render videos if container empty
+            let containerMap = {
+                'overview': 'overview-videos',
+                'data-entry': 'data-entry-videos',
+                'analysis': 'analysis-videos',
+                'monitoring': 'monitoring-videos'
+            };
+            const containerId = containerMap[tabId];
+            if (containerId) {
+                const containerEl = document.getElementById(containerId);
+                if (containerEl && (!containerEl.children.length || containerEl.innerHTML.trim() === '' || containerEl.children.length === 0)) {
+                    renderVideos(tabId, containerId);
+                }
+            }
+        }
+
+        // Global play video
+        window.playVideo = function(videoId, tabKey) {
+            const videos = TRAINING_VIDEOS[tabKey] || [];
+            const video = videos.find(v => v.id === videoId);
+            if (!video) return;
+            const player = document.getElementById('videoPlayer');
+            player.src = video.url;
+            document.getElementById('modalTitle').innerText = video.title;
+            document.getElementById('modalDesc').innerText = video.description;
+            document.getElementById('modalDuration').innerText = video.duration;
+            document.getElementById('modalModule').innerText = video.module;
+            const modal = document.getElementById('videoModal');
+            modal.classList.add('show');
+            document.body.style.overflow = 'hidden';
+            player.load();
+            player.play().catch(e => console.log("Autoplay blocked", e));
+        };
+
+        window.closeModal = function() {
+            const modal = document.getElementById('videoModal');
+            const player = document.getElementById('videoPlayer');
+            modal.classList.remove('show');
+            player.pause();
+            player.src = '';
+            document.body.style.overflow = '';
+        };
+
+        // Fullscreen toggle for modal
+        function initFullscreenToggle() {
+            const fsBtn = document.getElementById('fullscreenToggleBtn');
+            const modalElem = document.getElementById('videoModal');
+            if (fsBtn) {
+                fsBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    if (!document.fullscreenElement) {
+                        modalElem.requestFullscreen().catch(err => console.warn(err));
+                    } else {
+                        document.exitFullscreen();
+                    }
+                });
+            }
+            const videoElem = document.getElementById('videoPlayer');
+            videoElem.addEventListener('dblclick', () => {
+                if (!document.fullscreenElement) {
+                    modalElem.requestFullscreen().catch(err => console.warn(err));
+                } else {
+                    document.exitFullscreen();
+                }
+            });
+        }
+
+        // Event binding to tab buttons
+        function bindTabButtons() {
+            const buttons = document.querySelectorAll('.rt-tab-btn');
+            buttons.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const tabValue = btn.getAttribute('data-tab');
+                    if (tabValue) switchToTab(tabValue);
+                });
+            });
+        }
+
+        // Initialize page: render overview videos, attach events
+        document.addEventListener('DOMContentLoaded', () => {
+            renderVideos('overview', 'overview-videos');
+            bindTabButtons();
+            initFullscreenToggle();
+            // Preload other tabs lazily (optional: but we will render on demand)
+            const otherTabs = ['data-entry', 'analysis', 'monitoring'];
+            otherTabs.forEach(t => {
+                const cid = `${t}-videos`;
+                const container = document.getElementById(cid);
+                if (container && container.children.length === 0) {
+                    renderVideos(t, cid);
+                }
+            });
+        });
+
+        // escape key closes modal
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeModal();
+        });
+    </script>
+</body>
+</html>
